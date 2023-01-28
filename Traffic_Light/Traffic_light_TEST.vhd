@@ -1,0 +1,66 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY TEST IS
+END ENTITY;
+
+ARCHITECTURE BEHAVE OF TEST IS
+  SIGNAL CLK,RST                     : STD_LOGIC;
+  SIGNAL BUTTON_P0,BUTTON_P1         : STD_LOGIC;
+  SIGNAL SENSOR_IN_P0,SENSOR_IN_P1   : STD_LOGIC;
+  SIGNAL SENSOR_OUT_P0,SENSOR_OUT_P1 : STD_LOGIC;
+  SIGNAL Traffic_Lights              : STD_LOGIC_VECTOR(11 DOWNTO 0);
+  
+BEGIN
+  
+DUT: ENTITY WORK.MAIN PORT MAP(
+  CLK => CLK,
+  RST => RST,
+  BUTTON_P0      => BUTTON_P0,
+  BUTTON_P1      => BUTTON_P1,
+  SENSOR_IN_P0   => SENSOR_IN_P0,
+  SENSOR_IN_P1   => SENSOR_IN_P1,
+  SENSOR_OUT_P0  => SENSOR_OUT_P0,
+  SENSOR_OUT_P1  => SENSOR_OUT_P1,
+  Traffic_Lights => Traffic_Lights
+  );
+
+CLK_TIME: PROCESS
+BEGIN
+CLK <= '0'; WAIT FOR 10 NS;
+CLK <= '1'; WAIT FOR 10 NS;
+END PROCESS;
+
+STIMULIS : PROCESS
+BEGIN
+ REPORT("Starting simulation");
+ 
+ RST <= '1';
+ BUTTON_P0 <= '0';
+ BUTTON_P1 <= '0';
+ SENSOR_IN_P0 <= '0';
+ SENSOR_IN_P1 <= '0';
+ wait for 20 ns;
+ 
+ RST <= '0'; 
+ BUTTON_P0 <= '0';
+ BUTTON_P1 <= '1';
+ SENSOR_IN_P0 <= '0';
+ SENSOR_IN_P1 <= '1';
+ wait for 200 ns;
+ 
+ RST <= '1';
+ wait for 20 ns;
+ 
+ RST <= '0';
+ BUTTON_P0 <= '1';
+ BUTTON_P1 <= '0';
+ SENSOR_IN_P0 <= '1';
+ SENSOR_IN_P1 <= '0';
+ wait for 200 ns;
+ 
+ REPORT("Ending simulation");
+END PROCESS;
+   
+END ARCHITECTURE;
